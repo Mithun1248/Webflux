@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Webflux-Exa1
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
+      database: mydb
+      auto-index-creation: true
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/MessageDev/protocol/openid-connect/certs
+server:
+  port: 9090
+
