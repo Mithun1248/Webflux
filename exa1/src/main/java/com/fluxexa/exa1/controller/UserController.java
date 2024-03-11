@@ -5,12 +5,22 @@ import com.fluxexa.exa1.exec.UserAlreadyExistsException;
 import com.fluxexa.exa1.exec.UserNotFoundException;
 import com.fluxexa.exa1.repo.UserRepo;
 import lombok.extern.log4j.Log4j2;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.Duration;
 
 @RestController
@@ -19,6 +29,20 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private static final String FORMAT = "classpath:videos/%s.mp4";
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    @GetMapping(value = "/video",produces = "video/mp4") //Range of data will be sent
+    public Mono<Resource> getVideo(@RequestHeader("Range") String range){
+        System.out.println("Range in bytes:"+range);
+        return Mono.fromSupplier(
+                () -> resourceLoader.getResource(String.format(FORMAT,"javatechie"))
+        );
+    }
 
     @PostMapping("/")
     public Mono<User> saveUser(@RequestBody User u) {
@@ -110,4 +134,5 @@ public class UserController {
                 .publishOn(Schedulers.single())
                 .doOnNext(ignore -> log.info(Thread.currentThread().getId()));
     }
+
 }

@@ -19,7 +19,7 @@ public class UserCofig {
                 auth -> auth
                         .pathMatchers(HttpMethod.POST,"/").permitAll()
                         .pathMatchers(HttpMethod.GET,"/").permitAll()
-                        .anyExchange().authenticated()
+                        .anyExchange().permitAll()
         )
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(
