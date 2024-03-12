@@ -36,11 +36,15 @@ public class UserController {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    @GetMapping(value = "/video",produces = "video/mp4") //Range of data will be sent
-    public Mono<Resource> getVideo(@RequestHeader("Range") String range){
-        System.out.println("Range in bytes:"+range);
+//    @GetMapping(value = "/video" ,produces="video/mp4") //Range of data will be sent
+//    @GetMapping(value = "/video", produces = MediaType.TEXT_PLAIN_VALUE)
+//    public Mono<Resource> getVideo(@RequestHeader("Range") String range){
+      @GetMapping(value = "/video", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+      public Mono<Resource> getVideo(){
         return Mono.fromSupplier(
-                () -> resourceLoader.getResource(String.format(FORMAT,"javatechie"))
+ //               () -> resourceLoader.getResource(String.format(FORMAT,"javatechie"))
+                () -> resourceLoader.getResource("file:D:/files/random.txt") //expects file: or classpath:
+ //               () -> resourceLoader.getResource("file:D:/files/random.xlsx")
         );
     }
 
